@@ -1,0 +1,34 @@
+﻿@model AcmeVending.Models.InventoryVM
+
+<div class="text-muted">
+    <p class="lead">Type in a product # below to select a product.</p>
+</div>
+<div class="row">
+    <div class="col-md-2" style="text-align:center;background-color:#dedbdb; padding:1.5em 0">
+        
+        <input type="text" id="prod" style="width:90%;margin:.3em"/>  
+        <br />
+        @for (var i = 1; i < 10; i++)
+        {
+            if (i > 3 && i % 3 == 1)
+            {<br/>}
+            <input type="button" value="@i" />
+        }
+        <br />
+        <input type="button" value="0" />
+        <br/>
+        <input type="button" value="←" />
+        <input type="button" value="Enter" />
+        
+    </div>
+
+    <div class="col-md-8">
+        @foreach (var product in @Model.Products)
+        { 
+
+            <p>#@product.ItemNumber @product.Name  Qty: @product.Quantity</p>
+
+
+        }
+    </div>
+</div>
