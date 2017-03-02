@@ -1,34 +1,96 @@
 ﻿@model AcmeVending.Models.InventoryVM
 
-<div class="text-muted">
-    <p class="lead">Type in a product # below to select a product.</p>
-</div>
-<div class="row">
-    <div class="col-md-2" style="text-align:center;background-color:#dedbdb; padding:1.5em 0">
-        
-        <input type="text" id="prod" style="width:90%;margin:.3em"/>  
-        <br />
-        @for (var i = 1; i < 10; i++)
-        {
+    <div class="col-sm-4" style="text-align:center;background-color:#dedbdb; padding:.3em 0">
+        <div id="product" class="row">
+            <input type="text" id="prod" style="width:30%;margin:.3em" />
+            <br />
+            @for (var i = 1; i < 10; i++)
+            {
             if (i > 3 && i % 3 == 1)
-            {<br/>}
-            <input type="button" value="@i" />
-        }
-        <br />
-        <input type="button" value="0" />
-        <br/>
-        <input type="button" value="←" />
-        <input type="button" value="Enter" />
-        
+            {<br />}
+                <input type="button" value="@i" />
+            }
+            <br />
+            <input type="button" value="0" />
+            <input type="button" value="←" style="width:18%"/>
+        </div>
+
+        <div id="payment" class="row">
+            <hr />
+            <input type="text" id="cash" style="width:30%;margin-bottom:.3em" />
+            <br />
+
+            <input type="button" value="$5" style="width:15%" />
+            <input type="button" value="$1" style="width:15%" />
+            <br />
+            <input type="button" value="$.25" />
+            <input type="button" value="$.10" />
+            <input type="button" value="$.05" />
+        </div>
+
+        <div id="submit" class="row">
+            <hr />
+            <input type="button" value="Enter" style="width:30%" />
+
+        </div>
     </div>
 
-    <div class="col-md-8">
+    <div class="col-sm-8">
         @foreach (var product in @Model.Products)
-        { 
-
-            <p>#@product.ItemNumber @product.Name  Qty: @product.Quantity</p>
-
-
+        {
+            <p>
+                #@product.ItemNumber @product.Name.....<strong>@product.Price</strong><br />
+                Qty: @product.Quantity
+            </p>
         }
     </div>
-</div>
+
+
+@section scripts {
+ <script>
+    $(document).ready(function () {
+        $("#product :button").click(function () {
+            var prod = $("#prod").val();
+
+            switch (this.value) {
+                case '←':
+                    $("#prod").val(prod.substr(0, prod.length-1));
+                    break;
+                default:
+                    $("#prod").val(prod + this.value);
+            }
+        });
+
+        $("#payment :button").click(function () {
+            var total = parseFloat($("#cash").val().replace('$', '')) || 0;
+            var newEntry =  parseFloat(this.value.replace('$', ''));
+            $("#cash").val("$" + (newEntry + total));
+        });
+
+        $("#submit :button").click(function () {
+            var prod = $("#prod").val();
+            var cash = $("#cash").val().replace('$', '');
+            selectProduct(prod, cash);
+        });
+
+        var selectProduct = function (prodId, cash) {
+            $.ajax({
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                type: "POST",
+                url: "/Home/BuyProduct/",
+                data: "{purchase: { ProductId:" + prodId + ", Cash:" + cash + "} }",
+                success: function (response) {
+                    if (!response.Result) {
+                        alert("Fail!\n" + response.ErrorMessage);
+                    } else {
+                        alert("Success!\nChange refunded: $" + response.Change);
+                    }
+                }
+            });
+        }
+
+    });
+</script>
+}
+

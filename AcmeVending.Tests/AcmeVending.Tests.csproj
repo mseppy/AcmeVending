@@ -33,9 +33,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Core.4.0.0\lib\net45\Castle.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>False</Private>
+    </Reference>
+    <Reference Include="Moq, Version=4.7.1.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\packages\Moq.4.7.1\lib\net45\Moq.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -106,6 +114,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AcmeVending.Domain\AcmeVending.Domain.csproj">
+      <Project>{fb19e9c1-ec49-4b0b-ac43-b4f2c66a0aae}</Project>
+      <Name>AcmeVending.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AcmeVending.Services\AcmeVending.Services.csproj">
+      <Project>{2b9d3936-d3ec-4577-bb33-43bd9918dd6a}</Project>
+      <Name>AcmeVending.Services</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AcmeVending\AcmeVending.csproj">
       <Project>{69E67979-C712-4934-B78C-57B5BC750D82}</Project>
       <Name>AcmeVending</Name>

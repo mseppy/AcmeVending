@@ -18,7 +18,7 @@ namespace AcmeVending.Services
             throw new NotImplementedException();
         }
 
-        ICollection<Cash> IPaymentService.MakeChange(decimal amount)
+        public ICollection<Cash> MakeChange(decimal amount)
         {
             throw new NotImplementedException();
         }

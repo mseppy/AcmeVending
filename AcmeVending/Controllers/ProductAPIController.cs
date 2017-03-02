@@ -21,7 +21,7 @@ namespace AcmeVending.Controllers
                         {
                             ItemNumber = p.ItemNumber,
                             Name = p.Name,
-                            Price = p.Price,
+                            Price = p.Price.ToString("c"),
                             Quantity = p.Quantity                           
                         }).ToList();
         }

@@ -6,35 +6,24 @@ using System.Web.Http;
 
 namespace AcmeVending.Controllers
 {
-    public class ValuesController : ApiController
+    public class CaashController : ApiController
     {
-        private IList<ProductVM> products = new List<ProductVM>();
+        private IList<CashVM> till = new List<CashVM>();
 
-        public ValuesController()
+        public CaashController()
         {
-            var random = new Random((int)DateTime.Now.Ticks);
-            for (var i = 1; i < 11; i++)
-            {
-                products.Add(new ProductVM
-                {
-                    ItemNumber = i,
-                    Name = "Product " + i,
-                    Price = Math.Round(random.Next(0, 63423) / 10000M, 2),
-                    Quantity = 5
-                });
-            }
         }
 
         // GET api/values
-        public IEnumerable<ProductVM> Get()
+        public IEnumerable<CashVM> Get()
         {
-            return products;
+            return till;
         }
 
         // GET api/values/5
-        public ProductVM Get(int id)
+        public CashVM Get(string id)
         {
-            return products.FirstOrDefault(p => p.ItemNumber == id);
+            return till.FirstOrDefault(c => c.Value == id);
         }
 
         // POST api/values
@@ -48,8 +37,10 @@ namespace AcmeVending.Controllers
         }
 
         // DELETE api/values/5
-        public void Delete(int id)
+        public void Delete(string id)
         {
+            var billOrCoin = till.FirstOrDefault(c => c.Value == id);
+            till.Remove(billOrCoin);
         }
     }
 }

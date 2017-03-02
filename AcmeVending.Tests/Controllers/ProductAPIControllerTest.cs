@@ -30,10 +30,10 @@ namespace AcmeVending.Tests.Controllers
             ProductAPIController controller = new ProductAPIController();
 
             // Act
-            ProductVM result = controller.Get(5);
+            ProductVM result = controller.Get(6);
 
             // Assert
-            Assert.AreEqual("Product 5", result.Name);
+            Assert.AreEqual("Product 1", result.Name);
         }
 
         [TestMethod]

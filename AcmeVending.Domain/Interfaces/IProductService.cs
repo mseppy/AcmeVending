@@ -4,8 +4,9 @@ namespace AcmeVending.Domain.Interfaces
 {
     public interface IProductService
     {
-        Product SelectProduct(int itemId);
-
         ICollection<Product> LoadMachine();
+
+        Product SelectProduct(int itemId);
+        InventoryResult BuyProduct(int prodId, decimal cash);
     }
 }
