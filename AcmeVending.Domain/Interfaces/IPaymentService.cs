@@ -4,8 +4,9 @@ namespace AcmeVending.Domain.Interfaces
 {
     public interface IPaymentService
     {
-        decimal SubmitCashPayment(ICollection<Cash> payment);
-        decimal SubmitCreditPayment(string creditCardNumber);
+        InventoryResult SubmitCashPayment(ICollection<Cash> payment, decimal price);
+        InventoryResult SubmitCashPayment(decimal cash, decimal price);
+        InventoryResult SubmitCreditPayment(CreditCard creditCard, decimal price);
 
         ICollection<Cash> MakeChange(decimal amount);
         ICollection<Cash> LoadMachine();

@@ -15,8 +15,11 @@ namespace AcmeVending.Services
             set { products = value; }
         }
 
-        public ProductService()
-        { 
+        IPaymentService payments;
+        public IPaymentService PaymentServices
+        {
+            get { return payments ?? new PaymentService(); }
+            set { payments = value; }
         }
 
 
@@ -31,6 +34,34 @@ namespace AcmeVending.Services
             return ProductRepo.FirstOrDefault(p => p.ItemNumber == itemId);                       
         }
 
+        public InventoryResult BuyProduct(int prodId, decimal cash, CreditCard credit)
+        {
+            if (credit == null) { BuyProduct(prodId, cash); }
+
+            var result = new InventoryResult { Result = true };
+
+            products = ProductRepo;
+
+            var product = products.FirstOrDefault(p => p.ItemNumber == prodId);
+            if (product == null || product.Quantity == 0)
+            {
+                result.Result = false;
+                result.Message = "SOLD OUT";
+                return result;
+            }
+
+            var ccTrans = PaymentServices.SubmitCreditPayment(credit, product.Price);
+
+            if (ccTrans.Result)
+            {
+                product.Quantity--;
+            }
+
+            result.Change = cash;
+            result.Message = ccTrans.Message;
+
+            return result;
+        }
         public InventoryResult BuyProduct(int prodId, decimal cash)
         {
             var result = new InventoryResult { Result = true };
@@ -41,19 +72,19 @@ namespace AcmeVending.Services
             if (product == null || product.Quantity == 0) 
             {
                 result.Result = false;
-                result.ErrorMessage = "SOLD OUT";
+                result.Message = "SOLD OUT";
                 return result;
             }
 
-            if (cash < product.Price )
+            var cashTrans = PaymentServices.SubmitCashPayment(cash, product.Price);
+
+            if (cashTrans.Result)
             {
-                result.Result = false;
-                result.ErrorMessage = "NSF";
-                return result;
+                product.Quantity--;
             }
 
-            product.Quantity--;
-            result.Change = cash - product.Price;
+            result.Change = cashTrans.Change;
+            result.Message = cashTrans.Message;
 
             return result;
         }

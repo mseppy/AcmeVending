@@ -1,8 +1,6 @@
 ﻿using AcmeVending.Domain.Interfaces;
-using AcmeVending.Domain;
 using AcmeVending.Models;
 using AcmeVending.Services;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;

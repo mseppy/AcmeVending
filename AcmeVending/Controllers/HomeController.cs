@@ -45,10 +45,26 @@ namespace AcmeVending.Controllers
         [HttpPost]
         public JsonResult BuyProduct(PurchaseVM purchase)
         {
+            var cc = new CreditCard();
+
+            var expDate = new DateTime(int.Parse(purchase.ExpDate.Substring(0, 2)),
+                                        int.Parse(purchase.ExpDate.Substring(2, 2)),
+                                        int.Parse(purchase.ExpDate.Substring(4, 2)));
+
+            if (purchase.CreditType != "")
+            {
+                cc = new CreditCard
+                {
+                    CreditType = purchase.CreditType,
+                    CardNumber = purchase.CardNumber,
+                    ExpDate = expDate,
+                    NameOnCard = purchase.NameOnCard
+                };
+            }
             InventoryResult result;
             try
             {
-                result = ProdService.BuyProduct(purchase.ProductId, purchase.Cash);
+                result = ProdService.BuyProduct(purchase.ProductId, purchase.Cash, cc);
             }
             catch (Exception error)
             {

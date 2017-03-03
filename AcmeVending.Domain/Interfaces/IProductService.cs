@@ -8,5 +8,7 @@ namespace AcmeVending.Domain.Interfaces
 
         Product SelectProduct(int itemId);
         InventoryResult BuyProduct(int prodId, decimal cash);
+        InventoryResult BuyProduct(int prodId, decimal cash, CreditCard debitCard);
+
     }
 }

@@ -1,5 +1,4 @@
 ﻿using DataAnnotationsExtensions;
-using AcmeVending.Domain;
 
 namespace AcmeVending.Models
 {

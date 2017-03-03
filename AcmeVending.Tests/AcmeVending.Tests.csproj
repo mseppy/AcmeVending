@@ -105,7 +105,7 @@
     <Compile Include="Controllers\HomeControllerTest.cs" />
     <Compile Include="Controllers\ProductAPIControllerTest.cs" />
     <Compile Include="Services\ProductServicesTest.cs" />
-    <Compile Include="Services\CashServicesTest.cs" />
+    <Compile Include="Services\PaymentServicesTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />

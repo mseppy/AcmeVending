@@ -1,10 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 using System.Collections.Generic;
 using AcmeVending.Domain;
 using AcmeVending.Domain.Interfaces;
 using AcmeVending.Services;
-using System.Linq;
 using System;
 
 namespace AcmeVending.Tests.Services
@@ -29,7 +27,7 @@ namespace AcmeVending.Tests.Services
             var result = classUnderTest.BuyProduct(prodId, cash);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual("SOLD OUT", result.ErrorMessage);
+            Assert.AreEqual("SOLD OUT", result.Message);
         }
 
         [TestMethod]
@@ -41,7 +39,7 @@ namespace AcmeVending.Tests.Services
             var result = classUnderTest.BuyProduct(prodId, cash);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual("NSF", result.ErrorMessage);
+            Assert.AreEqual("NSF", result.Message);
         }
 
         [TestMethod]
@@ -55,7 +53,7 @@ namespace AcmeVending.Tests.Services
             var result = classUnderTest.BuyProduct(prodId, cash);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual("SOLD OUT", result.ErrorMessage);
+            Assert.AreEqual("SOLD OUT", result.Message);
         }
 
 
@@ -70,7 +68,6 @@ namespace AcmeVending.Tests.Services
 
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Result);
-            Assert.IsNull(result.ErrorMessage);
             Assert.AreEqual(expectedQty, classUnderTest.SelectProduct(prodId).Quantity);
         }
 
@@ -86,8 +83,29 @@ namespace AcmeVending.Tests.Services
 
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Result);
-            Assert.IsNull(result.ErrorMessage);
             Assert.AreEqual(expectedChange, result.Change);
+        }
+
+        [TestMethod]
+        public void BuyProduct_UseCredit()
+        {
+            var prodId = 6;
+            var cash = 0M;
+            var credit = new CreditCard
+            {
+                CreditType = "VISA",
+                ExpDate = new DateTime(2019, 10, 12),
+                CardNumber = "4111111111111111",
+                NameOnCard = "Joe P Tester"
+            };
+            var expectedResult = new InventoryResult { Result = true, Message = "APPROVED" };
+
+            var result = classUnderTest.BuyProduct(prodId, cash, credit);
+
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result.Result);
+            Assert.AreEqual(expectedResult.PayMethod, result.PayMethod);
+            Assert.AreEqual(expectedResult.Message, result.Message);
         }
     }
 }

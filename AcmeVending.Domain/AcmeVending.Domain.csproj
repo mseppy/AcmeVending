@@ -39,6 +39,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cash.cs" />
+    <Compile Include="CreditCard.cs" />
+    <Compile Include="Interfaces\ICreditAuth.cs" />
     <Compile Include="Interfaces\IPaymentService.cs" />
     <Compile Include="Interfaces\IProductService.cs" />
     <Compile Include="InventoryResult.cs" />

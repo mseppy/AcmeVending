@@ -14,15 +14,25 @@
             <input type="button" value="0" />
             <input type="button" value="←" style="width:18%"/>
         </div>
-
-        <div id="payment" class="row">
+        <div id="paycredit" class="row">
+            <hr />
+            <input type="text" id="credit" style="width:30%;margin-bottom:.3em" />
+            <br />
+            <p>
+                <input type="radio" name="CreditMethod" id="Visa" value="Visa" />
+                <label for="Visa">Visa</label>
+            <br/>
+                <input type="radio" name="CreditMethod" id="MC" value="MC"/>
+                <label for="MC">Master Card</label>
+            </p>
+        </div>
+        <div id="paycash" class="row">
             <hr />
             <input type="text" id="cash" style="width:30%;margin-bottom:.3em" />
             <br />
 
             <input type="button" value="$5" style="width:15%" />
             <input type="button" value="$1" style="width:15%" />
-            <br />
             <input type="button" value="$.25" />
             <input type="button" value="$.10" />
             <input type="button" value="$.05" />
@@ -30,7 +40,8 @@
 
         <div id="submit" class="row">
             <hr />
-            <input type="button" value="Enter" style="width:30%" />
+            <input type="button" value="Enter" style="width:20%" />
+            <input type="button" value="Cancel" style="width:20%" />
 
         </div>
     </div>
@@ -40,7 +51,7 @@
         {
             <p>
                 #@product.ItemNumber @product.Name.....<strong>@product.Price</strong><br />
-                Qty: @product.Quantity
+              @*  Qty: @product.Quantity*@
             </p>
         }
     </div>
@@ -61,30 +72,57 @@
             }
         });
 
-        $("#payment :button").click(function () {
+        $("#paycash :button").click(function () {
             var total = parseFloat($("#cash").val().replace('$', '')) || 0;
             var newEntry =  parseFloat(this.value.replace('$', ''));
             $("#cash").val("$" + (newEntry + total));
         });
 
-        $("#submit :button").click(function () {
+        $("#submit [value=Enter]").click(function () {
             var prod = $("#prod").val();
-            var cash = $("#cash").val().replace('$', '');
-            selectProduct(prod, cash);
+            var cash = $("#cash").val().replace('$', '') || 0;
+            var credit = $("#credit").val().replace(' ', '');
+            var ccNumber = $("#credit").val().replace(' ', '');
+            if (ccNumber != "" && ccNumber.length != 16) {
+                alert("Please enter valid credit card number (16 digits)");
+            }
+
+            var cardHolder = "Joe Tester";
+
+            var creditType;
+            if ($("#Visa :checked")) {
+                creditType = "Visa"
+            } else {
+                creditType = "MC"
+            }
+            
+            selectProduct(prod, cash, creditType, ccNumber, cardHolder);
+        });
+        $("#submit [value=Cancel]").click(function () {
+            var deposit = $("#cash").val();
+            $(":text").val("");
+            $(":radio").prop("checked", false);
+
+            alert("Cash refunded: " + deposit);
         });
 
-        var selectProduct = function (prodId, cash) {
+        var selectProduct = function (prodId, cash, credittype, ccNumber, cardHolder) {
             $.ajax({
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 type: "POST",
                 url: "/Home/BuyProduct/",
-                data: "{purchase: { ProductId:" + prodId + ", Cash:" + cash + "} }",
+                data: "{purchase: { ProductId:" + prodId
+                        + ", Cash:" + cash 
+                        + ", CreditType:\"" + credittype +"\""
+                        + ", ExpDate:\"030317\""
+                        + ", CardNumber:\"" + ccNumber + "\""
+                        + ", NameOnCard:\"" + cardHolder + "\"} }",
                 success: function (response) {
-                    if (!response.Result) {
-                        alert("Fail!\n" + response.ErrorMessage);
+                    if (response.Result) {
+                        alert("Cash refunded: $" + response.Change);
                     } else {
-                        alert("Success!\nChange refunded: $" + response.Change);
+                        alert(response.Message);
                     }
                 }
             });
